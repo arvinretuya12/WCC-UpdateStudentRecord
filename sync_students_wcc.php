@@ -130,7 +130,7 @@ try {
     }
     echo "</div>";
     echo "<h3 style='color:green'>Sync Complete!</h3>";
-    echo "<a href='wcc-update-record.php'>Go Back</a>";
+    echo "<a href='index.php'>Go Back</a>";
 
     unlink($uploadedFile);
 

@@ -1,0 +1,9 @@
+# Ignore Google API credentials
+credentials.json
+token.json
+
+# Ignore local environment files
+.env
+
+# Ignore dependency folder
+vendor/

@@ -34,7 +34,19 @@ try {
     $client = new Client();
     $client->setApplicationName('Student Sync Script');
     $client->setScopes([Sheets::SPREADSHEETS]);
-    $client->setAuthConfig('student-sync-app-wcc-68ccf7749e2b.json');
+
+    // Logic: Use Environment Variable if on Render, fallback to local file if on PC
+    $googleJson = getenv('GOOGLE_AUTH_JSON');
+
+    if ($googleJson) {
+        // We are on Render (Production)
+        $authConfig = json_decode($googleJson, true);
+        $client->setAuthConfig($authConfig);
+    } else {
+        // We are on your Local Machine (Development)
+        $client->setAuthConfig('credentials.json');
+    }
+
     $service = new Sheets($client);
 
     // 3. Read Excel

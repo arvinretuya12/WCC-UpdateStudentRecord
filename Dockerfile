@@ -28,4 +28,9 @@ COPY . .
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
+# Create the uploads directory and set permissions in one go
+RUN mkdir -p /var/www/html/uploads && \
+    chown -R www-data:www-data /var/www/html/uploads && \
+    chmod -R 755 /var/www/html/uploads
+
 EXPOSE 80

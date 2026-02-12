@@ -24,10 +24,21 @@ try {
     }
 
     $targetSheetName = $_POST['sheet_name'];
-    $uploadedFile = 'uploads/' . basename($_FILES['excel_file']['name']);
+    $directory = 'uploads/';
 
+    // 1. Create the directory if it doesn't exist
+    if (!is_dir($directory)) {
+        mkdir($directory, 0755, true);
+    }
+
+    // 2. Clean the filename (optional but recommended for Linux)
+    // This replaces spaces and brackets with underscores
+    $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $_FILES['excel_file']['name']);
+    $uploadedFile = $directory . $safeName;
+
+    // 3. Move the file
     if (!move_uploaded_file($_FILES['excel_file']['tmp_name'], $uploadedFile)) {
-        throw new Exception("Could not move uploaded file.");
+        throw new Exception("Could not move uploaded file. Check if 'uploads/' is writable.");
     }
 
     // 2. Setup Google Client

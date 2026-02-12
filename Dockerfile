@@ -1,7 +1,6 @@
-# Use PHP with Apache
 FROM php:8.2-apache
 
-# 1. Install system dependencies for Google API and Composer
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -9,22 +8,24 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install zip
 
-# 2. Install Composer (the PHP package manager)
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 3. Set the working directory
+# Enable Apache Mod Rewrite
+RUN a2enmod rewrite
+
 WORKDIR /var/www/html
 
-# 4. Copy your composer files first (for faster caching)
-COPY composer.json composer.lock* ./
+# Copy ONLY composer.json
+COPY composer.json ./
 
-# 5. Install the libraries (this creates the 'vendor' folder inside Docker)
-RUN composer install --no-dev --optimize-autoloader
+# Install dependencies (ignoring local platform requirements)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --ignore-platform-reqs
 
-# 6. Copy the rest of your application code
+# Now copy the rest of your PHP files
 COPY . .
 
-# 7. Set permissions for Apache
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80

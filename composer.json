@@ -1,11 +1,10 @@
 {
     "require": {
-        "google/apiclient": "^2.19",
-        "phpoffice/phpspreadsheet": "^5.4"
+        "google/apiclient": "^2.15"
     },
     "config": {
-        "platform": {
-            "php": "8.2.12"
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }

@@ -1,34 +1,30 @@
 FROM php:8.2-apache
 
-# Install system dependencies
+# Install system dependencies for Google API AND PhpSpreadsheet
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     zip \
     libzip-dev \
-    && docker-php-ext-install zip
+    libpng-dev \
+    libxml2-dev \
+    && docker-php-ext-install zip gd xml
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Enable Apache Mod Rewrite
-RUN a2enmod rewrite
-
 WORKDIR /var/www/html
 
-# Copy ONLY composer.json
+# Copy composer files
 COPY composer.json ./
 
-# Install dependencies (ignoring local platform requirements)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --ignore-platform-reqs
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Now copy the rest of your PHP files
+# Copy the rest of your code
 COPY . .
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
-
-# Create the uploads directory and set permissions in one go
+# Permissions for uploads
 RUN mkdir -p /var/www/html/uploads && \
     chown -R www-data:www-data /var/www/html/uploads && \
     chmod -R 755 /var/www/html/uploads

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -108,10 +109,8 @@ try {
         } else {
             echo "INSERTING: <strong>$excelName</strong> at row " . ($physicalRowPointer) . "<br>";
             
-            if (ob_get_level() > 0) {
-                ob_flush();
-            }
-            flush();
+            @ob_flush();
+            @flush();
 
             $newRowIndex = $physicalRowPointer - 1; // 0-based index for API
 

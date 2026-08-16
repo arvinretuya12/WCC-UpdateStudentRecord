@@ -108,6 +108,9 @@ try {
         } else {
             echo "INSERTING: <strong>$excelName</strong> at row " . ($physicalRowPointer) . "<br>";
             
+            ob_flush();
+            flush();
+
             $newRowIndex = $physicalRowPointer - 1; // 0-based index for API
 
             // A. Insert Empty Row
@@ -126,6 +129,8 @@ try {
             writeCell($service, $spreadsheetId, $targetSheetName, $physicalRowPointer, $excelName);
 
             $physicalRowPointer++;
+
+            sleep(5);
         }
     }
     echo "</div>";

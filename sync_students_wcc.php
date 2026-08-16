@@ -108,7 +108,9 @@ try {
         } else {
             echo "INSERTING: <strong>$excelName</strong> at row " . ($physicalRowPointer) . "<br>";
             
-            ob_flush();
+            if (ob_get_level() > 0) {
+                ob_flush();
+            }
             flush();
 
             $newRowIndex = $physicalRowPointer - 1; // 0-based index for API
